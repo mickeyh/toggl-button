@@ -13,6 +13,17 @@ togglbutton.render('.window-header:not(.toggl)', {observe: true}, function (elem
     projectElem = $('.board-header > a'),
     descriptionElem = $('.js-move-card');
 
+  var descriptionText = $('.js-card-desc').innerText;
+  var descriptionTextLines = descriptionText.split(/\s*\r?\n\s*/);
+  var TAG_PREFIX = 'toggltag: ';
+  var tagLineRegex = new RegExp('^' + TAG_PREFIX);
+  var tagLines = descriptionTextLines.filter((l) => {
+    return tagLineRegex.test(l);
+  });
+  var tags = tagLines.map((l) => {
+    return l.slice(TAG_PREFIX.length).trim();
+  });
+
   descFunc = function () {
     return titleElem.innerText;
   };
@@ -21,7 +32,8 @@ togglbutton.render('.window-header:not(.toggl)', {observe: true}, function (elem
     className: 'trello',
     description: descFunc,
     projectName: projectElem.innerText,
-    calculateTotal: true
+    tags: tags,
+    calculateTotal: true,
   });
 
   container.appendChild(link);
